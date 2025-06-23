@@ -36,14 +36,18 @@ app = FastAPI()
 @app.get("/api/info")
 def get_info(url: str):
     ydl_opts = {
-    "quiet": True,
-    "noplaylist": True,
-    "ignoreerrors": True,
-    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
-}
+        "quiet": True,
+        "noplaylist": True,
+        "ignoreerrors": True,
+        "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+    }
+
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         try:
             info = ydl.extract_info(url, download=False)
+            if info is None:
+                return {"error": "Failed to extract video info."}
+
             return {
                 "title": info.get("title"),
                 "thumbnail": info.get("thumbnail"),
@@ -53,7 +57,6 @@ def get_info(url: str):
             }
         except Exception as e:
             return {"error": str(e)}
-
 
 
 @app.get("/")
