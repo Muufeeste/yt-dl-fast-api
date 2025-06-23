@@ -33,6 +33,13 @@ def generate_random_file_name():
 
 
 app = FastAPI()
+@app.get("/api/info")
+def get_info(url: str):
+    return {
+        "title": "Test Title",
+        "url": url
+    }
+
 
 
 @app.get("/")
