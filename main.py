@@ -35,10 +35,19 @@ def generate_random_file_name():
 app = FastAPI()
 @app.get("/api/info")
 def get_info(url: str):
-    return {
-        "title": "Test Title",
-        "url": url
-    }
+    ydl_opts = {"quiet": True}
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        try:
+            info = ydl.extract_info(url, download=False)
+            return {
+                "title": info.get("title"),
+                "thumbnail": info.get("thumbnail"),
+                "duration": info.get("duration"),
+                "uploader": info.get("uploader"),
+                "formats": info.get("formats")
+            }
+        except Exception as e:
+            return {"error": str(e)}
 
 
 
