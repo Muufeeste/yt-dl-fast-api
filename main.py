@@ -35,7 +35,12 @@ def generate_random_file_name():
 app = FastAPI()
 @app.get("/api/info")
 def get_info(url: str):
-    ydl_opts = {"quiet": True}
+    ydl_opts = {
+    "quiet": True,
+    "noplaylist": True,
+    "ignoreerrors": True,
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+}
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         try:
             info = ydl.extract_info(url, download=False)
